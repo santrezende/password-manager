@@ -2,9 +2,13 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { ConfirmPasswordDto } from './dto/confirm-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersRepository } from './users.repository';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +28,15 @@ export class UsersService {
     return user;
   }
 
-  async getUserByEmail(username: string) {
-    return await this.usersRepository.getUserByEmail(username);
+  async getUserByEmail(email: string) {
+    return await this.usersRepository.getUserByEmail(email);
+  }
+
+  async delete(passwordDto: ConfirmPasswordDto, user: User) {
+    const { password } = passwordDto;
+    const validate = await bcrypt.compare(password, user.password);
+    if (!validate) throw new UnauthorizedException('Wrong password');
+
+    return await this.usersRepository.delete(user);
   }
 }

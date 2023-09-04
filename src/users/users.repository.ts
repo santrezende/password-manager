@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersRepository {
@@ -27,5 +28,12 @@ export class UsersRepository {
     return this.prisma.user.findFirst({
       where: { email },
     });
+  }
+
+  async delete(user: User) {
+    await this.prisma.card.deleteMany({ where: { userId: user.id } });
+    await this.prisma.credential.deleteMany({ where: { userId: user.id } });
+    await this.prisma.note.deleteMany({ where: { userId: user.id } });
+    return this.prisma.user.delete({ where: { id: user.id } });
   }
 }
