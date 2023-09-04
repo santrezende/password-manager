@@ -11,9 +11,9 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique 
-  password    String        
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  password    String
   Credentials Credential[]
   Notes       Note[]
   Cards       Card[]
@@ -22,37 +22,37 @@ model User {
 }
 
 model Credential {
-  id        Int      @id @default(autoincrement())
-  title     String   
-  url       String   
-  username  String   
-  password  String   
-  User      User    @relation(fields: [userId], references: [id])
-  userId    Int
+  id       Int    @id @default(autoincrement())
+  title    String
+  url      String
+  username String
+  password String
+  User     User   @relation(fields: [userId], references: [id])
+  userId   Int
 
   @@unique([userId, title])
   @@map("credentials")
 }
 
 model Note {
-  id        Int      @id @default(autoincrement())
-  title     String
-  note      String
-  Users     User    @relation(fields: [userId], references: [id])
-  userId    Int
+  id     Int    @id @default(autoincrement())
+  title  String
+  note   String
+  Users  User   @relation(fields: [userId], references: [id])
+  userId Int
 
   @@unique([userId, title])
   @@map("notes")
 }
 
 model Card {
-  id        Int      @id @default(autoincrement())
-  title     String 
-  number    String   @unique
-  name      String 
-  cvv       String 
-  exp       String 
-  password  String 
+  id        Int     @id @default(autoincrement())
+  title     String
+  number    String  @unique
+  name      String
+  cvv       String
+  exp       String
+  password  String
   isVirtual Boolean
   isCredit  Boolean
   isDebit   Boolean
